@@ -1,11 +1,13 @@
 const express = require("express");
 const { body, validationResult } = require("express-validator");
 const { isURL } = require("validator");
+const cors = require("cors");
 const { pipeline } = require("stream");
 const ytdl = require("ytdl-core");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(express.json());
 
 function downloadVideo(url, resolution) {
@@ -49,11 +51,9 @@ app.post("/download/:resolution", body("url").isURL(), async (req, res) => {
 
   try {
     await downloadVideo(url, resolution);
-    return res
-      .status(200)
-      .json({
-        message: `Video with resolution ${resolution} downloaded successfully.`,
-      });
+    return res.status(200).json({
+      message: `Video with resolution ${resolution} downloaded successfully.`,
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -82,6 +82,3 @@ app.post("/video_info", body("url").isURL(), async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-
-
