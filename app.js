@@ -59,7 +59,7 @@ app.post("/download/:resolution", body("url").isURL(), async (req, res) => {
   }
 });
 
-app.post("/video_info", body("url").isURL(), async (req, res) => {
+app.post("/video", body("url").isURL(), async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ error: "Invalid URL provided." });
