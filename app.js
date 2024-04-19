@@ -1,13 +1,13 @@
 const express = require("express");
 const { body, validationResult } = require("express-validator");
 const { isURL } = require("validator");
-//const cors = require("cors");
+const cors = require("cors");
 const { pipeline } = require("stream");
 const ytdl = require("ytdl-core");
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-//app.use(cors());
+app.use(cors());
 app.use(express.json());
 
 function downloadVideo(url, resolution) {
