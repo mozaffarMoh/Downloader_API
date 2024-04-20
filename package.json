@@ -3,6 +3,7 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "express-validator": "^7.0.1",
+    "fb-video-downloader": "^1.0.3",
     "validator": "^13.11.0",
     "ytdl-core": "^4.11.5"
   }
