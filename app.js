@@ -10,9 +10,20 @@ const PORT = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 
+function getFullYoutubeUrl(url) {
+  if (url.includes("youtu.be")) {
+    const startIndex = url.lastIndexOf("/") + 1;
+    const endIndex = url.indexOf("?") !== -1 ? url.indexOf("?") : url.length;
+    const videoId = url.substring(startIndex, endIndex);
+    return `https://www.youtube.com/watch?v=${videoId}`;
+  }
+  return url;
+}
+
 function downloadVideo(url, resolution) {
+  const fullUrl = getFullYoutubeUrl(url);
   return new Promise((resolve, reject) => {
-    const video = ytdl(url, {
+    const video = ytdl(fullUrl, {
       filter: (format) =>
         format.container === "mp4" && format.qualityLabel === resolution,
     });
@@ -29,11 +40,14 @@ function downloadVideo(url, resolution) {
 }
 
 function getVideoInfo(url) {
-  return ytdl.getBasicInfo(url);
+  const fullUrl = getFullYoutubeUrl(url);
+  return ytdl.getBasicInfo(fullUrl);
 }
 
 function isValidYoutubeUrl(url) {
-  return isURL(url) && url.includes("youtube.com");
+  return (
+    isURL(url) && (url.includes("youtube.com") || url.includes("youtu.be"))
+  );
 }
 
 app.post("/download/:resolution", body("url").isURL(), async (req, res) => {
